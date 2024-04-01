@@ -1,4 +1,3 @@
-import 'package:estados_app/services/usuario_service.dart';
 import 'package:flutter/material.dart';
 
 class Pagina1Page extends StatelessWidget {
@@ -8,9 +7,7 @@ class Pagina1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Pagina 1'),),
-      body: usuarioService.existeUsuario
-      ?const InformacionUsuario()
-      :Center(child: Text('No existe informacion del usuario'),),
+      body: InformacionUsuario(),
       floatingActionButton: FloatingActionButton(onPressed: (){
         Navigator.pushNamed(context, '/pagina2');
       }),
