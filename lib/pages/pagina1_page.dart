@@ -1,3 +1,4 @@
+import 'package:estados_app/models/usuario.dart';
 import 'package:estados_app/services/usuario_service.dart';
 import 'package:flutter/material.dart';
 
@@ -7,20 +8,29 @@ class Pagina1Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pagina 1'),),
-      body: usuarioService.existeUsuario
-      ?const InformacionUsuario()
-      :Center(child: Text('No existe informacion del usuario'),),
+      appBar: AppBar(title: Center(child: Text('Pagina 1',style: TextStyle(color: Colors.white),)),backgroundColor: Colors.blue,automaticallyImplyLeading: true,),
+      body: StreamBuilder(
+        stream: usuarioService.usuarioStream,
+        builder: (BuildContext context, AsyncSnapshot<Usuario> snapshot) {
+          return snapshot.hasData
+      ? InformacionUsuario(usuario: usuarioService.usuario,)
+      :Center(child: Text('No existe informacion del usuario'),);
+        },
+      ),
       floatingActionButton: FloatingActionButton(onPressed: (){
         Navigator.pushNamed(context, '/pagina2');
-      }),
+      },
+      backgroundColor: Colors.blue,
+      ),
       );
   }
 }
 
 class InformacionUsuario extends StatelessWidget {
-  const InformacionUsuario({
+  Usuario usuario;
+   InformacionUsuario({
     super.key,
+    required this.usuario
   });
 
   @override
@@ -31,13 +41,13 @@ class InformacionUsuario extends StatelessWidget {
       child: Column(children: [
         Text('General',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
         Divider(),
-        ListTile(title: Text('Nombre'),),
-        ListTile(title: Text('Edad'),),
+        ListTile(title: Text(usuario.nombre!),),
+        ListTile(title: Text(usuario.edad!.toString()),),
         Text('Profesiones',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.bold),),
         Divider(),
-        ListTile(title: Text('Profesion1'),),
-        ListTile(title: Text('Profesion2'),),
-        ListTile(title: Text('Profesion3'),)
+        ListTile(title: Text(usuario.profesiones!.first),),
+        ListTile(title: Text(usuario.profesiones!.first),),
+        ListTile(title: Text(usuario.profesiones!.last),)
       ],));
   }
 }

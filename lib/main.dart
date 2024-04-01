@@ -17,14 +17,7 @@ class MyApp extends StatelessWidget {
         '/pagina1':(_)=>Pagina1Page(),
         '/pagina2':(_)=>Pagina2Page(),
       },
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Material App Bar'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
+      home: Pagina1Page()
     );
   }
 }
