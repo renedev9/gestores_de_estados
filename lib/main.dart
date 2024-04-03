@@ -1,7 +1,8 @@
+import 'package:estados_app/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/pagina1_page.dart';
-import 'pages/pagina2_page.dart';
+import 'config/router/app_router.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -10,21 +11,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+
+    return MaterialApp.router(
+      title: 'Riverpod Providers',
       debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      routes:{
-        '/pagina1':(_)=>Pagina1Page(),
-        '/pagina2':(_)=>Pagina2Page(),
-      },
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Material App Bar'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
+      routerConfig: appRouter,
+      theme: AppTheme( isDarkmode: false ).getTheme(),
     );
   }
 }
