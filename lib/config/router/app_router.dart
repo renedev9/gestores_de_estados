@@ -1,8 +1,11 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../presentation/screens/screens.dart';
 
-final appRouter = GoRouter(
+
+final appRouterProvider =Provider<GoRouter>((ref){
+return GoRouter(
   routes: [
 
     GoRoute(
@@ -58,3 +61,5 @@ final appRouter = GoRouter(
 
 
   ]);
+});
+
