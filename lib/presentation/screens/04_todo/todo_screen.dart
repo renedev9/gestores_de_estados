@@ -21,10 +21,11 @@ class TodoScreen extends ConsumerWidget {
         child: const Icon( Icons.add ),
         onPressed: () {
           
-          ref.read(todosProvider.notifier).update((state) => [
+         /*  ref.read(todosProvider.notifier).update((state) => [
             ...state,
             Todo(id: const Uuid().v4(), description: RandomGenerator.getRandomName(), completedAt: null)
-          ]);
+          ]); */
+          ref.read(todosProvider.notifier).createTodo(RandomGenerator.getRandomName());
         },
       ),
     );
@@ -37,7 +38,7 @@ class _TodoView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final currentFilter= ref.watch(todoFilterProvider);
+    final currentFilter= ref.watch(todoCurrentFilterProvider);
     final todos= ref.watch(filteredTodosProvider);
     return Column(
       children: [
@@ -48,13 +49,14 @@ class _TodoView extends ConsumerWidget {
 
         SegmentedButton(
           segments: [
-            ButtonSegment(value: TodoFilter.all, icon: Text('Todos')),
-            ButtonSegment(value: TodoFilter.completed, icon: Text('Invitados')),
-            ButtonSegment(value: TodoFilter.pending, icon: Text('No invitados')),
+            ButtonSegment(value: FilterType.all, icon: Text('Todos')),
+            ButtonSegment(value: FilterType.completed, icon: Text('Invitados')),
+            ButtonSegment(value: FilterType.pending, icon: Text('No invitados')),
           ], 
-          selected:  <TodoFilter>{currentFilter },
+          selected:  <FilterType>{currentFilter },
           onSelectionChanged: (value) {
-            ref.read(todoFilterProvider.notifier).update((state) => value.first);
+            //ref.read(todoFilterProvider.notifier).update((state) => value.first);
+            ref.read(todoCurrentFilterProvider.notifier).changeCurrentFilter(value.first);
           },
         ),
         const SizedBox( height: 5 ),
@@ -69,7 +71,7 @@ class _TodoView extends ConsumerWidget {
                 title:  Text(todo.description),
                 value: todo.done, 
                 onChanged: ( value ) {
-                  
+                  ref.read(todosProvider.notifier).toggleTodo(todo.id);
                 }
               );
             },

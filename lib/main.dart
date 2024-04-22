@@ -14,7 +14,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final appRouter= ref.watch(appRouterProvider);
-    final isDarkMode= ref.watch(isDarkModeProvider);
+    final isDarkMode= ref.watch(darKModeProvider);
     return MaterialApp.router(
       title: 'Riverpod Providers',
       debugShowCheckedModeBanner: false,

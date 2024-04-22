@@ -10,8 +10,8 @@ class StateProviderScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
-    final isDarkMode = ref.watch(isDarkModeProvider);
-    final randomName = ref.watch(randomNameProvider);
+    final isDarkMode = ref.watch(darKModeProvider);
+    final name = ref.watch(userNameProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('State Provider'),
@@ -28,10 +28,11 @@ class StateProviderScreen extends ConsumerWidget {
                 ? Icon(Icons.light_mode_outlined, size: 100)
                 : Icon(Icons.dark_mode_outlined, size: 100),
             onPressed: () {
-              ref.read(isDarkModeProvider.notifier).update((state) => !state);
+              //ref.read(isDarkModeProvider.notifier).update((state) => !state);
+              ref.read(darKModeProvider.notifier).toggleDarkMode();
             },
           ),
-          Text(randomName, style: TextStyle(fontSize: 25)),
+          Text(name, style: TextStyle(fontSize: 25)),
           TextButton.icon(
             icon: const Icon(
               Icons.add,
@@ -40,7 +41,8 @@ class StateProviderScreen extends ConsumerWidget {
             label:
                 Text(counter.toString(), style: const TextStyle(fontSize: 100)),
             onPressed: () {
-              ref.read(counterProvider.notifier).update((state) => state + 1);
+              //ref.read(counterProvider.notifier).update((state) => state + 1);
+              ref.read(counterProvider.notifier).increaseByOne();
             },
           ),
           const Spacer(flex: 2),
@@ -50,7 +52,7 @@ class StateProviderScreen extends ConsumerWidget {
         label: const Text('Nombre aleatorio'),
         icon: const Icon(Icons.refresh_rounded),
         onPressed: () {
-          ref.invalidate(randomNameProvider); //*Esto invalida el el provider , vuelve a ejecutar la funcion RandomGenerator.getRandomName(), esta manera es mas sencilla, aunque la otra via es igual de efectiva
+          ref.invalidate(userNameProvider); //*Esto invalida el el provider , vuelve a ejecutar la funcion RandomGenerator.getRandomName(), esta manera es mas sencilla, aunque la otra via es igual de efectiva
 
           //! Via mas larga al llamar al mismo metodo que ejecuta el randomNameProvider
           //*ref.read(randomNameProvider.notifier).update((state) => RandomGenerator.getRandomName());

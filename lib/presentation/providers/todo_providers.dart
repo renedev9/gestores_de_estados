@@ -1,39 +1,71 @@
-import 'package:estados_app/config/config.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../config/config.dart';
 import '../../domain/domain.dart';
 
-enum TodoFilter{all,completed,pending}
+part 'todo_providers.g.dart';
 
-const uuid=Uuid();
+enum FilterType{all,completed,pending}
+const uuid= Uuid();
 
-final todoFilterProvider = StateProvider.autoDispose<TodoFilter>((ref) {
-  return TodoFilter.all;
-});
 
-final todosProvider = StateProvider.autoDispose<List<Todo>>((ref) {
-  return [
-    Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: null),
-    Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: DateTime.now()),
-    Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: DateTime.now()),
-    Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: null),
-    Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: DateTime.now())
-  ];
-});
+@riverpod
+class TodoCurrentFilter extends _$TodoCurrentFilter {
+  @override
+  FilterType build() {
+    return FilterType.all;
+  }
 
-final filteredTodosProvider = Provider.autoDispose<List<Todo>>((ref) {
-  //? Siempre que se necesite manejar un provider dentro de otro, utilizar siempre watch()
-  final selectedFilter= ref.watch(todoFilterProvider);
-  final todos= ref.watch(todosProvider);
- 
- switch (selectedFilter ) {
-   
-   case TodoFilter.all:
+  void changeCurrentFilter(FilterType newFilter){
+    state=newFilter;
+  }
+
+}
+
+@riverpod
+class Todos extends _$Todos {
+  @override
+  List<Todo> build() {
+    return [
+      Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: null),
+      Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: DateTime.now()),
+      Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: null),
+      Todo(id: uuid.v4(), description: RandomGenerator.getRandomName(), completedAt: DateTime.now()),
+    ];
+  }
+
+  void createTodo(String description){
+    state=[
+      ...state,
+      Todo(id: uuid.v4(),description: description,completedAt: null)
+    ];
+  }
+
+  void toggleTodo(String id){
+    state=state.map((todo){
+      if(todo.id==id){
+        todo= todo.copyWith(completedAt: todo.done?null:DateTime.now());
+      }
+      return todo;
+    }).toList();
+  }
+
+}
+
+@riverpod
+List<Todo> filteredTodos (FilteredTodosRef ref) {
+  final currentFilter= ref.watch(todoCurrentFilterProvider);
+ final todos= ref.watch(todosProvider);
+
+  
+  switch (currentFilter){
+    case FilterType.all:
       return todos;
-   case TodoFilter.completed:
+    case FilterType.completed:
       return todos.where((element) => element.done).toList();
-   case TodoFilter.pending:
-     return todos.where((element) => !element.done).toList();
- }
-});
+    case FilterType.pending:
+      return todos.where((element) => !element.done).toList();
+  }
+  
+}

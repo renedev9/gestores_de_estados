@@ -1,21 +1,40 @@
 
 import 'package:estados_app/config/config.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final pokemonNameProvider = FutureProvider<String>((ref) async {
+part 'future_providers.g.dart';
 
-  final pokemonId=ref.watch(pokemonIdProvider);
-   final pokemonName= await PokemonInformation.getPokemonName(pokemonId);
+@Riverpod(keepAlive: true)
+Future<String> pokemonName(PokemonNameRef ref) async{
+ final pokemonId= ref.watch(pokemonIdProvider); //*pokemonIdProvider por defecto es un AutoDisposeProvider, es necesario declarar el keepAlive en true, esto se debe a que puede estar autodestruido el provider cuando se llama aqui, asi que mejor mantener vivo el provider
 
-  return pokemonName; 
-});
-
-final pokemonIdProvider = StateProvider<int>((ref) {
-  return 1;
-});
-
-final pokemonProvider = FutureProvider.family<String,int>((ref,pokemonId) async {
   final pokemonName= await PokemonInformation.getPokemonName(pokemonId);
+  return pokemonName;
+}
 
-  return pokemonName; 
-});
+@Riverpod(keepAlive: true)
+class PokemonId extends _$PokemonId {
+  @override
+  int build() {
+    return 1;
+  }
+
+  void nextPokemon(){
+    state= state++;
+  }
+
+  void prevPokemon(){
+    if(state>1){
+
+    state= state--;
+    }
+  }
+}
+
+
+//! Anteriormente llamados family
+@Riverpod(keepAlive: true)
+Future<String> pokemon(PokemonRef ref,int pokemonId) async{
+  final pokemonName= await PokemonInformation.getPokemonName(pokemonId);
+   return pokemonName;
+}

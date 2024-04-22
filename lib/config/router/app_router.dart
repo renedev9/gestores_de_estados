@@ -1,23 +1,20 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../presentation/screens/screens.dart';
 
+part 'app_router.g.dart'; //* Se utiliza para generar la anotation de appRouter 
 
-final appRouterProvider =Provider<GoRouter>((ref){
-return GoRouter(
+@riverpod
+GoRouter appRouter (AppRouterRef ref) { 
+  return GoRouter(
   routes: [
 
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(),
     ),
-
-    GoRoute(
-      path: '/provider',
-      builder: (context, state) => const ProviderScreen(),
-    ),
-
+    
     GoRoute(
       path: '/provider-router',
       builder: (context, state) => const RouterScreen(),
@@ -48,18 +45,9 @@ return GoRouter(
       builder: (context, state) => const StreamProviderScreen(),
     ),
 
-    GoRoute(
-      path: '/change-notifier-provider',
-      builder: (context, state) => const ChangeNotifierScreen(),
-    ),
-
-    GoRoute(
-      path: '/state-notifier-provider',
-      builder: (context, state) => const StateNotifierScreen(),
-    ),
-
-
-
+    
   ]);
-});
+}
+
+
 
